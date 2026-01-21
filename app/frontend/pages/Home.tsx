@@ -1,7 +1,12 @@
 import { useStacks } from "@/lib/providers/StacksProvider"
-import { useQuery } from "@tanstack/react-query"
+import { request } from "@stacks/connect"
+import { ClarityType, hexToCV } from "@stacks/transactions"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import clsx from "clsx"
-import { Card, CardContent, CardHeader, CardTitle, Spinner } from "../components/ui"
+import { useState } from "react"
+import { Button, Card, CardContent, CardHeader, CardTitle, Spinner } from "../components/ui"
+
+const COUNTER_CONTRACT = "SPED77EEM0WYPMNKEWZX81V8NTVK5NEZ6CY09632.my-counter"
 
 interface StxData {
   balance: string
@@ -20,15 +25,64 @@ interface BalancesData {
 
 export default function Home() {
   const { stxAddress, isAuthenticated } = useStacks()
+  const queryClient = useQueryClient()
+  const [isIncrementing, setIsIncrementing] = useState(false)
 
   const { data: balances, isLoading } = useQuery({
     queryKey: ["stx-balances", stxAddress],
     queryFn: async () => {
-      const res = await fetch(`https://api.mainnet.hiro.so/extended/v1/address/${stxAddress}/balances`)
+      const res = await fetch(`https://api.hiro.so/extended/v1/address/${stxAddress}/balances`)
       return res.json() as Promise<BalancesData>
     },
     enabled: !!stxAddress,
   })
+
+  const {
+    data: counterValue,
+    isLoading: isCounterLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["counter-value", stxAddress],
+    queryFn: async () => {
+      const [contractAddress, contractName] = COUNTER_CONTRACT.split(".")
+
+      const res = await fetch(`https://api.hiro.so/v2/contracts/call-read/${contractAddress}/${contractName}/get-count`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sender: stxAddress, arguments: [] }),
+      })
+
+      const data = await res.json()
+
+      if (data.okay && data.result) {
+        const cv = hexToCV(data.result)
+        if (cv.type === ClarityType.Int || cv.type === ClarityType.UInt) return Number(cv.value)
+      }
+      return 0
+    },
+    enabled: !!stxAddress,
+    refetchInterval: 5000,
+  })
+
+  const handleIncrement = async () => {
+    if (!isAuthenticated) return
+    setIsIncrementing(true)
+    try {
+      await request("stx_callContract", {
+        contract: COUNTER_CONTRACT,
+        functionName: "increment",
+        functionArgs: [],
+      })
+      // Refetch counter after tx is submitted
+      setTimeout(() => {
+        refetch()
+      }, 2000)
+    } catch (error) {
+      console.error("Failed to increment:", error)
+    } finally {
+      setIsIncrementing(false)
+    }
+  }
 
   const formatStx = (microStx: string | undefined) => {
     if (!microStx) return "0"
@@ -54,6 +108,29 @@ export default function Home() {
           : balances?.stx ?
             <p className="text-2xl font-semibold">{formatStx(balances.stx.balance)} STX</p>
           : <p className="text-muted-foreground">0 STX</p>}
+        </CardContent>
+      </Card>
+
+      {/* Counter Interaction Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Counter Contract</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Current Count</span>
+            {!isAuthenticated ?
+              <span className="text-muted-foreground">—</span>
+            : isCounterLoading ?
+              <Spinner size="xs" />
+            : <span className="text-2xl font-semibold">{counterValue ?? 0}</span>}
+          </div>
+          <Button onClick={handleIncrement} disabled={!isAuthenticated || isIncrementing} className="w-full">
+            {isIncrementing ?
+              <Spinner size="xs" />
+            : "Increment"}
+          </Button>
+          {!isAuthenticated && <p className="text-sm text-muted-foreground text-center">Connect wallet to interact</p>}
         </CardContent>
       </Card>
 
