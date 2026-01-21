@@ -11,6 +11,7 @@ export default function Page() {
         <CardHeader>
           <CardTitle>page card</CardTitle>
         </CardHeader>
+
         <CardContent className="flex flex-col gap-3">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae, reiciendis architecto quasi officia illum animi vero voluptas nihil corporis alias dolore ipsa odio commodi
           velit sed quis distinctio maxime numquam!

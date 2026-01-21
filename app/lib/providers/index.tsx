@@ -4,6 +4,7 @@ import { farcasterMiniApp as miniAppConnector } from "@farcaster/miniapp-wagmi-c
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { base } from "viem/chains"
 import { createConfig, http, WagmiProvider } from "wagmi"
+import { StacksProvider } from "./StacksProvider"
 
 const wagmiConfig = createConfig({
   chains: [base],
@@ -17,7 +18,9 @@ const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 10
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <StacksProvider>{children}</StacksProvider>
+      </QueryClientProvider>
     </WagmiProvider>
   )
 }
