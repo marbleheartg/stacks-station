@@ -11,7 +11,6 @@ import Menu from "./components/Menu"
 import { ToastProvider } from "./components/ui"
 import Home from "./pages/Home"
 import Page from "./pages/Page"
-import UIKit from "./pages/UIKit"
 
 const pngImgSrcs: string[] = []
 const svgImgSrcs: string[] = []
@@ -20,23 +19,29 @@ export default function App() {
   useEffect(() => {
     clientErrorHandling()
     ;(async function () {
-      try {
-        const { user, client } = await sdk.context
-        const capabilities = await sdk.getCapabilities()
-        updateStore({ user, client, capabilities })
-      } catch {}
+      const isMiniApp = await sdk.isInMiniApp()
 
-      try {
-        await preloadImages([...pngImgSrcs.map((src) => `${src}.png`), ...svgImgSrcs.map((src) => `${src}.svg`)].map((src) => `/images/${src}`))
-      } catch {
-      } finally {
-        await sdk.actions.ready({ disableNativeGestures: true }).catch(() => {})
+      if (isMiniApp) {
+        try {
+          const { user, client } = await sdk.context
+          const capabilities = await sdk.getCapabilities()
+          updateStore({ user, client, capabilities })
+        } catch {}
+
+        try {
+          await preloadImages([...pngImgSrcs.map((src) => `${src}.png`), ...svgImgSrcs.map((src) => `${src}.svg`)].map((src) => `/images/${src}`))
+        } catch {
+        } finally {
+          await sdk.actions.ready({ disableNativeGestures: true }).catch(() => {})
+        }
+
+        try {
+          const { token: session } = await sdk.quickAuth.getToken()
+          updateStore({ session })
+        } catch {}
+      } else {
+        // Regular web app code
       }
-
-      try {
-        const { token: session } = await sdk.quickAuth.getToken()
-        updateStore({ session })
-      } catch {}
     })()
   }, [])
 
@@ -49,7 +54,6 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Page />} />
               <Route path="/home" element={<Home />} />
-              <Route path="/ui" element={<UIKit />} />
             </Routes>
             <Menu />
             <Background />

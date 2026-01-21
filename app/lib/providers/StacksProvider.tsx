@@ -1,13 +1,24 @@
 "use client"
 
-import { AppConfig, showConnect, UserSession } from "@stacks/connect"
-import { createContext, useContext, useEffect, useState } from "react"
-import { MINIAPP } from "../constants"
+import { connect, disconnect, getLocalStorage, isConnected } from "@stacks/connect"
+import { createContext, useContext, useState } from "react"
+
+interface AddressEntry {
+  address: string
+  publicKey?: string
+}
+
+interface StacksLocalStorage {
+  addresses: {
+    stx: AddressEntry[]
+    btc: AddressEntry[]
+  }
+}
 
 interface StacksContextValue {
-  userSession: UserSession
-  userData: any
-  authenticate: () => void
+  userData: StacksLocalStorage | null
+  stxAddress: string | null
+  authenticate: () => Promise<void>
   signOut: () => void
   isAuthenticated: boolean
 }
@@ -15,58 +26,35 @@ interface StacksContextValue {
 const StacksContext = createContext<StacksContextValue | undefined>(undefined)
 
 export function StacksProvider({ children }: { children: React.ReactNode }) {
-  const [userSession] = useState(() => {
-    const appConfig = new AppConfig(["store_write", "publish_data"])
-    return new UserSession({ appConfig })
+  const [userData, setUserData] = useState<StacksLocalStorage | null>(() => {
+    if (typeof window === "undefined") return null
+    return isConnected() ? (getLocalStorage() as StacksLocalStorage) : null
   })
 
-  const [userData, setUserData] = useState<any>(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window === "undefined") return false
+    return isConnected()
+  })
 
-  useEffect(() => {
-    if (userSession.isSignInPending()) {
-      userSession.handlePendingSignIn().then((userData) => {
-        setUserData(userData)
-        setIsAuthenticated(true)
-      })
-    } else if (userSession.isUserSignedIn()) {
-      setUserData(userSession.loadUserData())
-      setIsAuthenticated(true)
-    }
-  }, [userSession])
-
-  const authenticate = () => {
-    showConnect({
-      appDetails: {
-        name: MINIAPP.title,
-        icon: window.location.origin + "/images/og/icon.png",
-      },
-      redirectTo: "/",
-      onFinish: () => {
-        setUserData(userSession.loadUserData())
-        setIsAuthenticated(true)
-      },
-      userSession,
-    })
+  const authenticate = async () => {
+    await connect({ walletConnectProjectId: "YOUR_PROJECT_ID" })
+    setUserData(getLocalStorage() as StacksLocalStorage)
+    setIsAuthenticated(true)
   }
 
   const signOut = () => {
-    userSession.signUserOut()
+    disconnect()
     setUserData(null)
     setIsAuthenticated(false)
   }
 
-  return (
-    <StacksContext.Provider value={{ userSession, userData, authenticate, signOut, isAuthenticated }}>
-      {children}
-    </StacksContext.Provider>
-  )
+  const stxAddress = userData?.addresses?.stx?.[0]?.address ?? null
+
+  return <StacksContext.Provider value={{ userData, stxAddress, authenticate, signOut, isAuthenticated }}>{children}</StacksContext.Provider>
 }
 
 export function useStacks() {
   const context = useContext(StacksContext)
-  if (!context) {
-    throw new Error("useStacks must be used within a StacksProvider")
-  }
+  if (!context) throw new Error("useStacks must be used within a StacksProvider")
   return context
 }
