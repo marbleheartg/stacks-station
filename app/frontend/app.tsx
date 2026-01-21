@@ -10,7 +10,6 @@ import Header from "./components/Header"
 import Menu from "./components/Menu"
 import { ToastProvider } from "./components/ui"
 import Home from "./pages/Home"
-import Page from "./pages/Page"
 
 const pngImgSrcs: string[] = []
 const svgImgSrcs: string[] = []
@@ -40,7 +39,6 @@ export default function App() {
           updateStore({ session })
         } catch {}
       } else {
-        // Regular web app code
       }
     })()
   }, [])
@@ -52,8 +50,7 @@ export default function App() {
           <BrowserRouter>
             <Header />
             <Routes>
-              <Route path="/" element={<Page />} />
-              <Route path="/home" element={<Home />} />
+              <Route path="/" element={<Home />} />
             </Routes>
             <Menu />
             <Background />

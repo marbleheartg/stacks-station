@@ -43,7 +43,7 @@ const Header = () => {
       >
         <div className={clsx("relative flex items-center", "bg-white/10 glass rounded-2xl", "h-8", "pl-2 pr-[35px]")}>
           <div className="text-base text-(--heading) pb-px">
-            {isAuthenticated && userData ? userData.addresses?.stx?.[0]?.address.slice(0, 6) : "connect"}
+            {isAuthenticated && userData ? userData.addresses?.stx?.[0]?.address.slice(0, 4) : "connect"}
           </div>
 
           <div className={clsx("absolute right-0 top-0 aspect-square w-[30px]", "border-2 border-(--bg-border) rounded-full", "cursor-pointer")}>
