@@ -9,6 +9,7 @@ import Background from "./components/Background"
 import Header from "./components/Header"
 import Menu from "./components/Menu"
 import { ToastProvider } from "./components/ui"
+import Bridging from "./pages/Bridging"
 import Home from "./pages/Home"
 
 const pngImgSrcs: string[] = []
@@ -51,6 +52,7 @@ export default function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/bridging" element={<Bridging />} />
             </Routes>
             <Menu />
             <Background />
