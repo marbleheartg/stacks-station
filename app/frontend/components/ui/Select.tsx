@@ -22,7 +22,17 @@ interface SelectProps {
   haptic?: boolean
 }
 
-export function Select({ options, value, onChange, placeholder = "select...", label, error, disabled = false, className, haptic = true }: SelectProps) {
+export function Select({
+  options,
+  value,
+  onChange,
+  placeholder = "select...",
+  label,
+  error,
+  disabled = false,
+  className,
+  haptic = true,
+}: SelectProps) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -92,7 +102,7 @@ export function Select({ options, value, onChange, placeholder = "select...", la
           className={clsx(
             "w-full flex items-center justify-between gap-2",
             "bg-(--surface)/10 text-(--text) border rounded-lg",
-            "p-2 pt-1.5 text-left",
+            "pt-1.5 pb-1 px-2 text-left",
             "transition-all duration-200",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             open && "border-(--heading)/50",
@@ -127,7 +137,12 @@ export function Select({ options, value, onChange, placeholder = "select...", la
                 left: position.left,
                 width: position.width,
               }}
-              className={clsx("z-50", "bg-(--surface) border border-(--border) rounded-xl overflow-hidden", "animate-in fade-in duration-150", "max-h-48 overflow-y-auto")}
+              className={clsx(
+                "z-50",
+                "bg-(--surface) border border-(--border) rounded-xl overflow-hidden",
+                "animate-in fade-in duration-150",
+                "max-h-48 overflow-y-auto",
+              )}
             >
               {options.map((option) => (
                 <div
@@ -143,7 +158,15 @@ export function Select({ options, value, onChange, placeholder = "select...", la
                   {option.icon}
                   <span className="truncate">{option.label}</span>
                   {option.value === value && (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="ml-auto shrink-0 text-(--heading)">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      className="ml-auto shrink-0 text-(--heading)"
+                    >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   )}

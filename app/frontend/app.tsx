@@ -11,6 +11,7 @@ import Menu from "./components/Menu"
 import { ToastProvider } from "./components/ui"
 import Bridging from "./pages/Bridging"
 import Home from "./pages/Home"
+import Swap from "./pages/Swap"
 
 const pngImgSrcs: string[] = []
 const svgImgSrcs: string[] = []
@@ -52,6 +53,7 @@ export default function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/swap" element={<Swap />} />
               <Route path="/bridging" element={<Bridging />} />
             </Routes>
             <Menu />

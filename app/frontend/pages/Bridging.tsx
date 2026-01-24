@@ -21,15 +21,15 @@ export default function Bridging() {
   const { data: usdcBalance, isLoading } = useQuery({
     queryKey: ["usdc-balance", stxAddress],
     queryFn: async () => {
-        if (!stxAddress) return "0"
-        // Using Hiro API to fetch fungible token balances
-        const res = await fetch(`https://api.hiro.so/extended/v1/address/${stxAddress}/balances`)
-        const data = await res.json()
-        const usdc = data.fungible_tokens?.[USDC_CONTRACT]
-        if (usdc) {
-             return (Number(usdc.balance) / 1_000_000).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })
-        }
-        return "0"
+      if (!stxAddress) return "0"
+      // Using Hiro API to fetch fungible token balances
+      const res = await fetch(`https://api.hiro.so/extended/v1/address/${stxAddress}/balances`)
+      const data = await res.json()
+      const usdc = data.fungible_tokens?.[USDC_CONTRACT]
+      if (usdc) {
+        return (Number(usdc.balance) / 1_000_000).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })
+      }
+      return "0"
     },
     enabled: !!stxAddress,
   })
@@ -41,58 +41,51 @@ export default function Bridging() {
           <CardTitle>USDCx Bridge</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-            <p className="text-muted-foreground text-sm">
-                Bridge your USDC from Ethereum and other chains to Stacks (USDCx) using the Cross-Chain Transfer Protocol (CCTP).
-            </p>
-            
-            <div className="flex flex-col gap-2 p-3 bg-secondary/10 rounded-lg border border-border">
-                <span className="text-xs text-muted-foreground font-medium uppercase">Your USDCx Balance</span>
-                {!isAuthenticated ? (
-                    <span className="text-muted-foreground">—</span>
-                ) : isLoading ? (
-                    <Spinner size="sm" />
-                ) : (
-                    <span className="text-2xl font-bold">{usdcBalance} USDC</span>
-                )}
-            </div>
+          <p className="text-muted-foreground text-sm">
+            Bridge your USDC from Ethereum and other chains to Stacks (USDCx) using the Cross-Chain Transfer Protocol (CCTP).
+          </p>
 
-            <div className="flex flex-col gap-3 mt-2">
-                 <Button 
-                    className="w-full gap-2" 
-                    onClick={() => window.open("https://app.xlink.network/bridge", "_blank")}
-                 >
-                    Bridge via XLink <ExternalLinkIcon />
-                 </Button>
-                 
-                 <Button 
-                    variant="outline" 
-                    className="w-full gap-2"
-                    onClick={() => window.open("https://docs.stacks.co/more-guides/bridging-usdcx", "_blank")}
-                 >
-                    View Guide <ExternalLinkIcon />
-                 </Button>
-            </div>
+          <div className="flex flex-col gap-2 p-3 bg-secondary/10 rounded-lg border border-border">
+            <span className="text-xs text-muted-foreground font-medium uppercase">Your USDCx Balance</span>
+            {!isAuthenticated ?
+              <span className="text-muted-foreground">—</span>
+            : isLoading ?
+              <Spinner size="sm" />
+            : <span className="text-2xl font-bold">{usdcBalance} USDC</span>}
+          </div>
+
+          <div className="flex flex-col gap-3 mt-2">
+            <Button className="w-full gap-2" onClick={() => window.open("https://app.xlink.network/bridge", "_blank")}>
+              Bridge via XLink <ExternalLinkIcon />
+            </Button>
+
+            <Button
+              variant="primary"
+              className="w-full gap-2"
+              onClick={() => window.open("https://docs.stacks.co/more-guides/bridging-usdcx", "_blank")}
+            >
+              View Guide <ExternalLinkIcon />
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
       <Card>
-          <CardHeader>
-              <CardTitle>How it works</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <p>
-                  1. <strong>Deposit</strong> USDC on the source chain (e.g., Ethereum).
-              </p>
-              <p>
-                  2. <strong>Burn</strong> happens on the source chain via Circle's CCTP.
-              </p>
-              <p>
-                  3. <strong>Mint</strong> happens on Stacks, delivering USDCx to your wallet.
-              </p>
-              <p className="mt-2 text-xs opacity-70">
-                  Powered by Circle CCTP and Stacks ecosystem partners.
-              </p>
-          </CardContent>
+        <CardHeader>
+          <CardTitle>How it works</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+          <p>
+            1. <strong>Deposit</strong> USDC on the source chain (e.g., Ethereum).
+          </p>
+          <p>
+            2. <strong>Burn</strong> happens on the source chain via Circle&apos;s CCTP.
+          </p>
+          <p>
+            3. <strong>Mint</strong> happens on Stacks, delivering USDCx to your wallet.
+          </p>
+          <p className="mt-2 text-xs opacity-70">Powered by Circle CCTP and Stacks ecosystem partners.</p>
+        </CardContent>
       </Card>
     </main>
   )
