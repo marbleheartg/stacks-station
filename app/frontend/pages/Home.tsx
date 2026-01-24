@@ -94,7 +94,7 @@ export default function Home() {
   const nftCount = balances?.non_fungible_tokens ? Object.values(balances.non_fungible_tokens).reduce((acc, t) => acc + Number(t.count), 0) : 0
 
   return (
-    <main className={clsx("flex flex-col gap-5", "px-5 pt-20 pb-26", "overflow-y-scroll overflow-x-hidden")}>
+    <main className={clsx("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5", "px-5 pt-24 pb-26 mx-auto max-w-6xl w-full", "overflow-y-auto overflow-x-hidden")}>
       {/* STX Balance Card */}
       <Card>
         <CardHeader>
@@ -147,9 +147,9 @@ export default function Home() {
         </Card>
       )}
 
-      {/* Activity Card */}
+      {/* Activity Card - Spans 2 columns on medium, 1 on large if wanted, or we can make it span row-span-2 */}
       {isAuthenticated && balances?.stx && (
-        <Card>
+        <Card className="md:col-span-2 lg:col-span-1 lg:row-span-2">
           <CardHeader>
             <CardTitle>Activity</CardTitle>
           </CardHeader>
@@ -178,7 +178,7 @@ export default function Home() {
 
       {/* Fungible Tokens Card */}
       {isAuthenticated && fungibleTokens.length > 0 && (
-        <Card>
+        <Card className="md:col-span-2 lg:col-span-1">
           <CardHeader>
             <CardTitle>Tokens ({fungibleTokens.length})</CardTitle>
           </CardHeader>

@@ -28,7 +28,7 @@ const Header = () => {
   }, [session])
 
   return (
-    <header className={clsx("fixed top-5 inset-x-9", "flex justify-between items-center", "z-30")}>
+    <header className={clsx("fixed top-5 left-0 right-0 mx-auto w-full max-w-6xl px-5", "flex justify-between items-center", "z-30")}>
       <div className={clsx("w-8 bg-white/10 glass", "border-2 border-(--bg-border) rounded-full")}>
         <NextImage className="rounded-full" src={"/images/og/icon.png"} alt="logo" width={32} height={32} priority />
       </div>

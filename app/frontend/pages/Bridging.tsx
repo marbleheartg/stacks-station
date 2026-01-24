@@ -35,7 +35,7 @@ export default function Bridging() {
   })
 
   return (
-    <main className={clsx("flex flex-col gap-5", "px-5 pt-20 pb-26", "overflow-y-scroll overflow-x-hidden")}>
+    <main className={clsx("grid grid-cols-1 md:grid-cols-2 gap-5", "px-5 pt-24 pb-26 mx-auto max-w-6xl w-full", "overflow-y-auto overflow-x-hidden")}>
       <Card>
         <CardHeader>
           <CardTitle>USDCx Bridge</CardTitle>

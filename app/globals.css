@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --bg: oklch(0.3 0.08 10);
-
+  --bg: oklch(0.3 0.08 45);
   --bg-surface: oklch(from var(--bg) calc(l * 1.25) c h);
   --bg-border: oklch(from var(--bg-surface) calc(l + 0.1) c h);
   --surface: oklch(from var(--bg) calc(l * 1.6) c h);
