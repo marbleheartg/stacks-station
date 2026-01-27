@@ -2,9 +2,6 @@ import { useStacks } from "@/lib/providers/StacksProvider"
 import sdk from "@farcaster/miniapp-sdk"
 import clsx from "clsx"
 import NextImage from "next/image"
-import { useEffect } from "react"
-import { base } from "viem/chains"
-import { useConnect, useConnectors, useSwitchChain } from "wagmi"
 import { store } from "../../lib/store"
 
 const Header = () => {
@@ -12,17 +9,6 @@ const Header = () => {
 
   const user = store((state) => state.user)
   const session = store((state) => state.session)
-
-  const { connect } = useConnect()
-  const connectors = useConnectors()
-  const { switchChain } = useSwitchChain()
-
-  useEffect(() => {
-    if (connectors.length > 0) {
-        connect({ connector: connectors[0] })
-        switchChain({ chainId: base.id })
-    }
-  }, [session, connectors, connect, switchChain])
 
   const handleAuth = () => {
     sdk.haptics.impactOccurred("medium")

@@ -9,12 +9,6 @@ const mainFont = DM_Sans({
   subsets: ["latin"],
 })
 
-// const titleFont = DM_Sans({
-//   variable: "--titleFont",
-//   weight: "variable",
-//   subsets: ["latin"],
-// })
-
 export default function RootLayout({
   children,
 }: Readonly<{
