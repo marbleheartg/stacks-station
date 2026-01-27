@@ -1,11 +1,8 @@
 import { useStacks } from "@/lib/providers/StacksProvider"
-import { useQuery } from "@tanstack/react-query"
+import { useStxBalances } from "@/lib/hooks/useStxQueries"
+import { USDC_CONTRACT } from "@/lib/constants"
 import clsx from "clsx"
 import { Button, Card, CardContent, CardHeader, CardTitle, Spinner } from "../components/ui"
-
-// Common USDC contract on Stacks (Simulated/Example)
-// You should verify the exact contract principal for USDCx on mainnet
-const USDC_CONTRACT = "SP3XD84X3PE79SHJAZCDM1CF5JWFUA65KLJQP2V0X.usdc-token"
 
 const ExternalLinkIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -17,22 +14,15 @@ const ExternalLinkIcon = () => (
 
 export default function Bridging() {
   const { stxAddress, isAuthenticated } = useStacks()
+  const { data: balances, isLoading } = useStxBalances(stxAddress)
 
-  const { data: usdcBalance, isLoading } = useQuery({
-    queryKey: ["usdc-balance", stxAddress],
-    queryFn: async () => {
-      if (!stxAddress) return "0"
-      // Using Hiro API to fetch fungible token balances
-      const res = await fetch(`https://api.hiro.so/extended/v1/address/${stxAddress}/balances`)
-      const data = await res.json()
-      const usdc = data.fungible_tokens?.[USDC_CONTRACT]
-      if (usdc) {
-        return (Number(usdc.balance) / 1_000_000).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })
-      }
-      return "0"
-    },
-    enabled: !!stxAddress,
-  })
+  const getUsdcBalance = () => {
+    if (!balances?.fungible_tokens?.[USDC_CONTRACT]) return "0"
+    const usdc = balances.fungible_tokens[USDC_CONTRACT]
+    return (Number(usdc.balance) / 1_000_000).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })
+  }
+
+  const usdcBalance = getUsdcBalance()
 
   return (
     <main className={clsx("grid grid-cols-1 md:grid-cols-2 gap-5", "px-5 pt-24 pb-26 mx-auto max-w-6xl w-full", "overflow-y-auto overflow-x-hidden")}>
@@ -47,11 +37,13 @@ export default function Bridging() {
 
           <div className="flex flex-col gap-2 p-3 bg-secondary/10 rounded-lg border border-border">
             <span className="text-xs text-muted-foreground font-medium uppercase">Your USDCx Balance</span>
-            {!isAuthenticated ?
+            {!isAuthenticated ? (
               <span className="text-muted-foreground">—</span>
-            : isLoading ?
+            ) : isLoading ? (
               <Spinner size="sm" />
-            : <span className="text-2xl font-bold">{usdcBalance} USDC</span>}
+            ) : (
+              <span className="text-2xl font-bold">{usdcBalance} USDC</span>
+            )}
           </div>
 
           <div className="flex flex-col gap-3 mt-2">

@@ -1,5 +1,6 @@
 import { useStacks } from "@/lib/providers/StacksProvider"
-import { useQuery } from "@tanstack/react-query"
+import { useStxBalances } from "@/lib/hooks/useStxQueries"
+import { TOKEN_CONTRACTS, TOKEN_DECIMALS } from "@/lib/constants"
 import clsx from "clsx"
 import { useState } from "react"
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Select, Spinner } from "../components/ui"
@@ -11,52 +12,18 @@ const TOKENS = [
   { value: "xBTC", label: "xBTC", icon: null },
 ]
 
-const TOKEN_CONTRACTS: Record<string, string> = {
-  STX: "native",
-  ALEX: "SP3K8BC0PPEVCV7NZ6QSRWPQ2JE9E5B6N3PA0KBR9.age000-governance-token::alex",
-  USDA: "SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.usda-token::usda",
-  xBTC: "SP3DX3H4FEYZJZ586MFBS25ZW3HZDMEW92260R2PR.Wrapped-Bitcoin::xbtc",
-}
-
-// Token decimals for formatting
-const TOKEN_DECIMALS: Record<string, number> = {
-  STX: 6,
-  ALEX: 8,
-  USDA: 6, // Verify USDA decimals, usually 6 or 8. USDA is 6.
-  xBTC: 8,
-}
-
-interface StxData {
-  balance: string
-  locked: string
-}
-
-interface BalancesData {
-  stx: StxData
-  fungible_tokens: Record<string, { balance: string }>
-}
-
 export default function Swap() {
   const { stxAddress, isAuthenticated } = useStacks()
+  const { data: balances, isLoading: isBalancesLoading } = useStxBalances(stxAddress)
+
   const [fromToken, setFromToken] = useState("STX")
   const [toToken, setToToken] = useState("ALEX")
   const [fromAmount, setFromAmount] = useState("")
   const [toAmount, setToAmount] = useState("")
   const [isSwapping, setIsSwapping] = useState(false)
-  
-  // Mock exchange rate
-  const EXCHANGE_RATE = 1.5 
 
-  // Fetch balances
-  const { data: balances, isLoading: isBalancesLoading } = useQuery({
-    queryKey: ["balances", stxAddress],
-    queryFn: async () => {
-      if (!stxAddress) return null
-      const res = await fetch(`https://api.hiro.so/extended/v1/address/${stxAddress}/balances`)
-      return res.json() as Promise<BalancesData>
-    },
-    enabled: !!stxAddress,
-  })
+  // Mock exchange rate
+  const EXCHANGE_RATE = 1.5
 
   const getTokenBalance = (tokenSymbol: string) => {
     if (!balances) return "0.00"
@@ -70,13 +37,13 @@ export default function Swap() {
         balance = balances.fungible_tokens[contractId].balance
       }
     }
-    
+
     const decimals = TOKEN_DECIMALS[tokenSymbol] || 6
     const formatted = Number(balance) / Math.pow(10, decimals)
-    
-    return formatted.toLocaleString(undefined, { 
-      minimumFractionDigits: 2, 
-      maximumFractionDigits: 6 
+
+    return formatted.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 6,
     })
   }
 
@@ -199,11 +166,8 @@ export default function Swap() {
           )}
 
           <Button size="lg" className="w-full mt-2 font-bold text-lg" onClick={handleSwap} disabled={!isAuthenticated || !fromAmount || isSwapping}>
-            {!isAuthenticated ?
-              "Connect Wallet"
-            : isSwapping ?
-              <Spinner />
-            : "Swap"}
+            {!isAuthenticated ? <Spinner size="xs" className="hidden" /> : null}
+            {!isAuthenticated ? "Connect Wallet" : isSwapping ? <Spinner /> : "Swap"}
           </Button>
         </CardContent>
       </Card>

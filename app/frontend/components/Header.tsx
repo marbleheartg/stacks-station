@@ -8,24 +8,27 @@ import { useConnect, useConnectors, useSwitchChain } from "wagmi"
 import { store } from "../../lib/store"
 
 const Header = () => {
-  const { authenticate, signOut, isAuthenticated, userData } = useStacks()
+  const { authenticate, signOut, isAuthenticated, stxAddress } = useStacks()
 
-  const { user } = store()
+  const user = store((state) => state.user)
+  const session = store((state) => state.session)
 
-  const { mutate: connect } = useConnect()
+  const { connect } = useConnect()
   const connectors = useConnectors()
-  const { mutate: switchChain } = useSwitchChain()
-  const session = store.getState().session
+  const { switchChain } = useSwitchChain()
 
   useEffect(() => {
-    connect({ connector: connectors[0] })
-    switchChain({ chainId: base.id })
+    if (connectors.length > 0) {
+        connect({ connector: connectors[0] })
+        switchChain({ chainId: base.id })
+    }
+  }, [session, connectors, connect, switchChain])
 
-    setTimeout(() => {
-      connect({ connector: connectors[0] })
-      switchChain({ chainId: base.id })
-    }, 2000)
-  }, [session])
+  const handleAuth = () => {
+    sdk.haptics.impactOccurred("medium")
+    if (isAuthenticated) signOut()
+    else authenticate()
+  }
 
   return (
     <header className={clsx("fixed top-5 left-0 right-0 mx-auto w-full max-w-6xl px-5", "flex justify-between items-center", "z-30")}>
@@ -33,21 +36,21 @@ const Header = () => {
         <NextImage className="rounded-full" src={"/images/og/icon.png"} alt="logo" width={32} height={32} priority />
       </div>
 
-      <div
-        onClick={() => {
-          sdk.haptics.impactOccurred("medium")
-          if (isAuthenticated && userData) signOut()
-          else authenticate()
-        }}
-        className="cursor-pointer"
-      >
+      <div onClick={handleAuth} className="cursor-pointer">
         <div className={clsx("relative flex items-center", "bg-white/10 glass rounded-2xl", "h-8", "pl-2 pr-[35px]")}>
           <div className="text-base text-(--heading) pb-px">
-            {isAuthenticated && userData ? userData.addresses?.stx?.[0]?.address.slice(0, 4) : "connect"}
+            {isAuthenticated && stxAddress ? stxAddress.slice(0, 4) + "..." + stxAddress.slice(-4) : "connect"}
           </div>
 
           <div className={clsx("absolute right-0 top-0 aspect-square w-[30px]", "border-2 border-(--bg-border) rounded-full", "cursor-pointer")}>
-            <NextImage src={user?.pfpUrl || "https://placekittens.com/32/32"} fill alt="pfp" className="rounded-full" priority />
+            <NextImage
+              src={user?.pfpUrl || "/images/og/icon.png"}
+              fill
+              alt="pfp"
+              className="rounded-full"
+              priority
+              unoptimized={!user?.pfpUrl} // Use unoptimized for external or fallback
+            />
           </div>
         </div>
       </div>

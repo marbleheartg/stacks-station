@@ -1,5 +1,22 @@
 const CA = "0x980C93A5A5706Cf9B2cEa8E5f4b88070AF1155AA"
 
+export const STACKS_API = "https://api.hiro.so"
+export const COUNTER_CONTRACT = "SPED77EEM0WYPMNKEWZX81V8NTVK5NEZ6CY09632.my-counter"
+export const USDC_CONTRACT = "SP3XD84X3PE79SHJAZCDM1CF5JWFUA65KLJQP2V0X.usdc-token"
+
+export const TOKEN_CONTRACTS: Record<string, string> = {
+  STX: "native",
+  ALEX: "SP3K8BC0PPEVCV7NZ6QSRWPQ2JE9E5B6N3PA0KBR9.age000-governance-token::alex",
+  USDA: "SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.usda-token::usda",
+  xBTC: "SP3DX3H4FEYZJZ586MFBS25ZW3HZDMEW92260R2PR.Wrapped-Bitcoin::xbtc",
+}
+export const TOKEN_DECIMALS: Record<string, number> = {
+  STX: 6,
+  ALEX: 8,
+  USDA: 6,
+  xBTC: 8,
+}
+
 const MINIAPP = {
   title: "stacks-station",
   description: "stacks-station",

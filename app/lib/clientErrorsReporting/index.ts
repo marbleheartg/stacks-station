@@ -1,8 +1,10 @@
-import axios from "axios"
-
 export default function clientErrorHandling() {
   function reportClientError(params: unknown) {
-    axios.post("/api/clientError", params)
+    fetch("/api/clientError", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    }).catch(() => {})
   }
 
   window.onerror = (message, source, lineno, colno, error) =>
