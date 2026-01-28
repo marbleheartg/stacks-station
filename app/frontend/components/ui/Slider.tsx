@@ -70,9 +70,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
           </div>
         )}
         <div className="relative">
-          {/* Track */}
           <div className={clsx("absolute left-0 right-0 inset-y-0 my-auto rounded-full bg-white/10", size === "sm" && "h-1.5", size === "md" && "h-2")} />
-          {/* Filled track */}
           <div
             className={clsx(
               "absolute left-0 inset-y-0 my-auto rounded-full transition-all duration-100",
@@ -85,7 +83,6 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
             )}
             style={{ width: `${percentage}%` }}
           />
-          {/* Input */}
           <input
             ref={inputRef}
             type="range"
@@ -102,7 +99,6 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
               "disabled:opacity-50 disabled:cursor-not-allowed",
               size === "sm" && "h-4",
               size === "md" && "h-5",
-              // Thumb styles via CSS
               "[&::-webkit-slider-thumb]:appearance-none",
               "[&::-webkit-slider-thumb]:rounded-full",
               "[&::-webkit-slider-thumb]:bg-white",

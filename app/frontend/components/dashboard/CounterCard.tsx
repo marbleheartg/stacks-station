@@ -1,9 +1,9 @@
-import { useState } from "react"
 import { Button, Card, CardContent, CardHeader, CardTitle, Spinner } from "@/frontend/components/ui"
-import { useStacks } from "@/lib/providers/StacksProvider"
-import { request } from "@stacks/connect"
 import { COUNTER_CONTRACT } from "@/lib/constants"
 import { useCounterValue } from "@/lib/hooks/useStxQueries"
+import { useStacks } from "@/lib/providers/StacksProvider"
+import { request } from "@stacks/connect"
+import { useState } from "react"
 
 export function CounterCard() {
   const { stxAddress, isAuthenticated } = useStacks()
@@ -19,7 +19,6 @@ export function CounterCard() {
         functionName: "increment",
         functionArgs: [],
       })
-      // Refetch counter after tx is submitted
       setTimeout(() => {
         refetch()
       }, 2000)
@@ -38,16 +37,16 @@ export function CounterCard() {
       <CardContent className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <span className="text-muted-foreground">Current Count</span>
-          {!isAuthenticated ? (
+          {!isAuthenticated ?
             <span className="text-muted-foreground">—</span>
-          ) : isCounterLoading ? (
+          : isCounterLoading ?
             <Spinner size="xs" />
-          ) : (
-            <span className="text-2xl font-semibold">{counterValue ?? 0}</span>
-          )}
+          : <span className="text-2xl font-semibold">{counterValue ?? 0}</span>}
         </div>
         <Button onClick={handleIncrement} disabled={!isAuthenticated || isIncrementing} className="w-full">
-          {isIncrementing ? <Spinner size="xs" /> : "Increment"}
+          {isIncrementing ?
+            <Spinner size="xs" />
+          : "Increment"}
         </Button>
         {!isAuthenticated && <p className="text-sm text-muted-foreground text-center">Connect wallet to interact</p>}
       </CardContent>

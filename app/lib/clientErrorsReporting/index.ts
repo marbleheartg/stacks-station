@@ -7,7 +7,9 @@ export default function clientErrorHandling() {
     }).catch(() => {})
   }
 
-  window.onerror = (message, source, lineno, colno, error) =>
+  const originalOnError = window.onerror
+
+  window.onerror = (message, source, lineno, colno, error) => {
     reportClientError({
       type: "js-error",
       ua: navigator.userAgent,
@@ -17,38 +19,40 @@ export default function clientErrorHandling() {
       colno,
       stack: error?.stack,
     })
+    if (originalOnError) {
+      originalOnError(message, source, lineno, colno, error)
+    }
+  }
 
-  window.addEventListener(
-    "error",
-    function (event) {
-      const target = event.target as HTMLElement
+  const errorHandler = (event: ErrorEvent | Event) => {
+    const target = event.target as HTMLElement
 
-      if (event instanceof ErrorEvent) {
-        reportClientError({
-          type: "runtime-error",
-          ua: navigator.userAgent,
-          message: event.message,
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-          stack: event.error?.stack,
-        })
-      } else {
-        if (["IMG", "LINK"].includes(target.tagName)) return
+    if (event instanceof ErrorEvent) {
+      reportClientError({
+        type: "runtime-error",
+        ua: navigator.userAgent,
+        message: event.message,
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+        stack: event.error?.stack,
+      })
+    } else {
+      if (["IMG", "LINK"].includes(target.tagName)) return
 
-        reportClientError({
-          type: "resource-error",
-          ua: navigator.userAgent,
-          tagName: target.tagName,
-          src: (target as HTMLImageElement).src || (target as HTMLLinkElement).href || undefined,
-          outerHTML: target.outerHTML?.slice(0, 300),
-        })
-      }
-    },
-    true,
-  )
+      reportClientError({
+        type: "resource-error",
+        ua: navigator.userAgent,
+        tagName: target.tagName,
+        src: (target as HTMLImageElement).src || (target as HTMLLinkElement).href || undefined,
+        outerHTML: target.outerHTML?.slice(0, 300),
+      })
+    }
+  }
 
-  window.addEventListener("unhandledrejection", function (event) {
+  window.addEventListener("error", errorHandler, true)
+
+  const unhandledRejectionHandler = (event: PromiseRejectionEvent) => {
     const reason = event.reason
 
     reportClientError({
@@ -57,5 +61,13 @@ export default function clientErrorHandling() {
       message: reason?.message || String(reason),
       stack: reason?.stack || null,
     })
-  })
+  }
+
+  window.addEventListener("unhandledrejection", unhandledRejectionHandler)
+
+  return () => {
+    window.onerror = originalOnError
+    window.removeEventListener("error", errorHandler, true)
+    window.removeEventListener("unhandledrejection", unhandledRejectionHandler)
+  }
 }

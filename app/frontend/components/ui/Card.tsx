@@ -9,36 +9,35 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hoverable?: boolean
 }
 
-const Card = forwardRef<HTMLDivElement, CardProps>(({ className, variant = "default", padding = "md", hoverable = false, children, ...props }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={clsx(
-        "rounded-2xl overflow-hidden",
-        "transition-all duration-300 ease-out",
+const Card = forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant = "default", padding = "md", hoverable = false, children, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={clsx(
+          "rounded-2xl overflow-hidden",
+          "transition-all duration-300 ease-out",
 
-        // Padding variants
-        padding === "none" && "",
-        padding === "sm" && "p-3 pt-2.5",
-        padding === "md" && "p-4 pt-[15px]",
-        padding === "lg" && "p-5 pt-4",
+          padding === "none" && "",
+          padding === "sm" && "p-3 pt-2.5",
+          padding === "md" && "p-4 pt-[15px]",
+          padding === "lg" && "p-5 pt-4",
 
-        // Style variants
-        variant === "default" && ["bg-(--surface)/50", "border border-(--border)"],
-        variant === "elevated" && ["bg-white/12 glass", "shadow-xl shadow-black/20"],
-        variant === "glass" && ["bg-white/10 glass"],
+          variant === "default" && ["bg-(--surface)/50", "border border-(--border)"],
+          variant === "elevated" && ["bg-white/12 glass", "shadow-xl shadow-black/20"],
+          variant === "glass" && ["bg-white/10 glass"],
 
-        // Hover effect
-        hoverable && "hover:bg-white/5 hover:scale-[1.01] cursor-pointer",
+          hoverable && "hover:bg-white/5 hover:scale-[1.01] cursor-pointer",
 
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  )
-})
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  },
+)
 
 Card.displayName = "Card"
 

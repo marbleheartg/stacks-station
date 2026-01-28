@@ -1,8 +1,7 @@
 import sdk from "@farcaster/miniapp-sdk"
 import clsx from "clsx"
-import { type InputHTMLAttributes, forwardRef, type ReactNode, createContext, useContext } from "react"
+import { type InputHTMLAttributes, type ReactNode, createContext, forwardRef, useContext } from "react"
 
-// Radio Group Context
 interface RadioGroupContextValue {
   value?: string
   onChange?: (value: string) => void
@@ -45,7 +44,7 @@ export function RadioGroup({
           "flex",
           orientation === "vertical" && "flex-col gap-2.5",
           orientation === "horizontal" && "flex-row gap-4 flex-wrap",
-          className
+          className,
         )}
       >
         {children}
@@ -79,14 +78,7 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(
     }
 
     return (
-      <label
-        className={clsx(
-          "inline-flex gap-2.5 cursor-pointer",
-          "select-none",
-          disabled && "opacity-50 cursor-not-allowed",
-          className
-        )}
-      >
+      <label className={clsx("inline-flex gap-2.5 cursor-pointer", "select-none", disabled && "opacity-50 cursor-not-allowed", className)}>
         <div className="relative shrink-0 flex items-center justify-center">
           <input
             ref={ref}
@@ -106,9 +98,7 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(
               "rounded-full border-2 transition-all duration-200",
               size === "sm" && "w-4 h-4",
               size === "md" && "w-5 h-5",
-              checked
-                ? "border-(--heading)/90"
-                : "bg-white/5 border-(--border) hover:border-(--heading)/50"
+              checked ? "border-(--heading)/90" : "bg-white/5 border-(--border) hover:border-(--heading)/50",
             )}
           >
             {checked && (
@@ -117,7 +107,7 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(
                   "rounded-full bg-(--heading)/90",
                   "animate-in zoom-in duration-150",
                   size === "sm" && "w-2 h-2",
-                  size === "md" && "w-2.5 h-2.5"
+                  size === "md" && "w-2.5 h-2.5",
                 )}
               />
             )}
@@ -125,23 +115,13 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(
         </div>
         {(label || description) && (
           <div className="flex flex-col gap-0.5 pt-0.5">
-            {label && (
-              <span
-                className={clsx(
-                  "font-medium text-(--text)",
-                  size === "sm" && "text-[10px]",
-                  size === "md" && "text-xs"
-                )}
-              >
-                {label}
-              </span>
-            )}
+            {label && <span className={clsx("font-medium text-(--text)", size === "sm" && "text-[10px]", size === "md" && "text-xs")}>{label}</span>}
             {description && <span className="text-[10px] text-(--text)/60">{description}</span>}
           </div>
         )}
       </label>
     )
-  }
+  },
 )
 
 Radio.displayName = "Radio"

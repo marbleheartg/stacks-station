@@ -15,7 +15,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", loading = false, haptic = true, disabled, children, onClick, startIcon, endIcon, ...props }, ref) => {
+  (
+    { className, variant = "primary", size = "md", loading = false, haptic = true, disabled, children, onClick, startIcon, endIcon, ...props },
+    ref,
+  ) => {
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (haptic) {
         sdk.haptics.impactOccurred("light")
@@ -35,29 +38,18 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "active:scale-[0.97]",
           "disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100",
 
-          // Size variants
           size === "sm" && "text-[10px] px-2.5 py-1 rounded-lg",
           size === "md" && "text-xs px-3.5 py-1.5 rounded-xl",
           size === "lg" && "text-sm px-5 py-2.5 rounded-xl",
 
-          // Color variants
           variant === "primary" && [
             "bg-(--heading)/90 text-(--bg)",
             "border border-(--heading)/20",
             "hover:bg-(--heading) hover:shadow-lg hover:shadow-(--heading)/20",
             "glass",
           ],
-          variant === "secondary" && [
-            "bg-white/10 text-(--text)",
-            "border border-(--border)",
-            "hover:bg-white/15 hover:text-(--heading)",
-            "glass",
-          ],
-          variant === "ghost" && [
-            "bg-transparent text-(--text)",
-            "border border-transparent",
-            "hover:bg-white/8 hover:text-(--heading)",
-          ],
+          variant === "secondary" && ["bg-white/10 text-(--text)", "border border-(--border)", "hover:bg-white/15 hover:text-(--heading)", "glass"],
+          variant === "ghost" && ["bg-transparent text-(--text)", "border border-transparent", "hover:bg-white/8 hover:text-(--heading)"],
           variant === "danger" && [
             "bg-red-500/80 text-white",
             "border border-red-400/30",

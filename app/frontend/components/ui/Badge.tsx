@@ -20,11 +20,9 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, variant = "d
         "rounded-full",
         "transition-colors duration-200",
 
-        // Size variants
         size === "sm" && "text-[9px] px-2 py-0.5",
         size === "md" && "text-[10px] px-2.5 py-1",
 
-        // Color variants
         variant === "default" && "bg-white/15 text-(--text) border border-(--border)",
         variant === "success" && "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30",
         variant === "warning" && "bg-amber-500/20 text-amber-300 border border-amber-500/30",

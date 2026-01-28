@@ -33,7 +33,6 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
           "rounded-full overflow-hidden",
           bordered && "ring-2 ring-(--bg-border)",
 
-          // Size classes for container
           size === "xs" && "w-6 h-6",
           size === "sm" && "w-8 h-8",
           size === "md" && "w-10 h-10",
@@ -44,10 +43,9 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         )}
         {...props}
       >
-        {src ? (
+        {src ?
           <NextImage src={src} alt={alt} width={dimension} height={dimension} className="rounded-full object-cover" />
-        ) : (
-          <div
+        : <div
             className={clsx(
               "w-full h-full flex items-center justify-center",
               "bg-(--surface)/50 text-(--heading)",
@@ -61,7 +59,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
           >
             {fallback?.slice(0, 2) || "?"}
           </div>
-        )}
+        }
 
         {status && (
           <span

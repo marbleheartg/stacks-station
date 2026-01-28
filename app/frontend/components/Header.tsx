@@ -29,14 +29,7 @@ const Header = () => {
           </div>
 
           <div className={clsx("absolute right-0 top-0 aspect-square w-[30px]", "border-2 border-(--bg-border) rounded-full", "cursor-pointer")}>
-            <NextImage
-              src={user?.pfpUrl || "https://placekittens.com/32/32"}
-              fill
-              alt="pfp"
-              className="rounded-full"
-              priority
-              unoptimized={!user?.pfpUrl} // Use unoptimized for external or fallback
-            />
+            <NextImage src={user?.pfpUrl || "https://placekittens.com/32/32"} fill alt="pfp" className="rounded-full" priority unoptimized />
           </div>
         </div>
       </div>

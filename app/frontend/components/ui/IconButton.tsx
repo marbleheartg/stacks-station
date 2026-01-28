@@ -34,24 +34,13 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           "disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--heading)/50",
 
-          // Size variants
           size === "sm" && "w-7 h-7",
           size === "md" && "w-9 h-9",
           size === "lg" && "w-11 h-11",
 
-          // Color variants
-          variant === "default" && [
-            "bg-white/10 text-(--text)",
-            "border border-(--border)",
-            "hover:bg-white/15 hover:text-(--heading)",
-            "glass",
-          ],
+          variant === "default" && ["bg-white/10 text-(--text)", "border border-(--border)", "hover:bg-white/15 hover:text-(--heading)", "glass"],
           variant === "ghost" && ["bg-transparent text-(--text)", "hover:bg-white/8 hover:text-(--heading)"],
-          variant === "danger" && [
-            "bg-red-500/20 text-red-300",
-            "border border-red-500/30",
-            "hover:bg-red-500/30 hover:text-red-200",
-          ],
+          variant === "danger" && ["bg-red-500/20 text-red-300", "border border-red-500/30", "hover:bg-red-500/30 hover:text-red-200"],
 
           className,
         )}

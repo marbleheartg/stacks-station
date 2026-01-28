@@ -1,6 +1,6 @@
 import sdk from "@farcaster/miniapp-sdk"
 import clsx from "clsx"
-import { type ReactNode, useRef, useLayoutEffect, useState } from "react"
+import { type ReactNode, useLayoutEffect, useRef, useState } from "react"
 
 interface Segment {
   value: string
@@ -19,15 +19,7 @@ interface SegmentedControlProps {
   haptic?: boolean
 }
 
-export function SegmentedControl({
-  segments,
-  value,
-  onChange,
-  size = "md",
-  fullWidth = false,
-  className,
-  haptic = true,
-}: SegmentedControlProps) {
+export function SegmentedControl({ segments, value, onChange, size = "md", fullWidth = false, className, haptic = true }: SegmentedControlProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
 
@@ -53,27 +45,18 @@ export function SegmentedControl({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className={clsx(
-        "relative inline-flex",
-        "bg-white/5 rounded-xl p-1",
-        fullWidth && "w-full",
-        className
-      )}
-    >
-      {/* Animated indicator */}
+    <div ref={containerRef} className={clsx("relative inline-flex", "bg-white/5 rounded-xl p-1", fullWidth && "w-full", className)}>
       <div
         className={clsx(
           "absolute bg-white/15 glass rounded-lg",
           "transition-all duration-300 ease-out",
           size === "sm" && "top-1 bottom-1",
-          size === "md" && "top-1 bottom-1"
+          size === "md" && "top-1 bottom-1",
         )}
         style={{ left: indicatorStyle.left, width: indicatorStyle.width }}
       />
 
-      {segments.map(segment => (
+      {segments.map((segment) => (
         <button
           key={segment.value}
           data-segment-value={segment.value}
@@ -86,12 +69,10 @@ export function SegmentedControl({
             "disabled:opacity-40 disabled:cursor-not-allowed",
             fullWidth && "flex-1",
 
-            // Size
             size === "sm" && "text-[10px] px-2.5 py-1.5 rounded-lg",
             size === "md" && "text-xs px-3.5 py-2 rounded-lg",
 
-            // Active state
-            value === segment.value ? "text-(--heading)" : "text-(--text)/60 hover:text-(--text)"
+            value === segment.value ? "text-(--heading)" : "text-(--text)/60 hover:text-(--text)",
           )}
         >
           {segment.icon}

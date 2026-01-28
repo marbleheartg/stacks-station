@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { type ReactNode, useState, useRef, useEffect, useCallback } from "react"
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 
 type TooltipPosition = "top" | "bottom" | "left" | "right"
 
@@ -47,7 +47,6 @@ export function Tooltip({ content, children, position = "top", delay = 200, clas
         break
     }
 
-    // Keep within viewport
     x = Math.max(8, Math.min(x, window.innerWidth - tooltip.width - 8))
     y = Math.max(8, Math.min(y, window.innerHeight - tooltip.height - 8))
 
@@ -107,7 +106,7 @@ export function Tooltip({ content, children, position = "top", delay = 200, clas
             position === "bottom" && "origin-top",
             position === "left" && "origin-right",
             position === "right" && "origin-left",
-            className
+            className,
           )}
         >
           {content}
@@ -117,7 +116,7 @@ export function Tooltip({ content, children, position = "top", delay = 200, clas
               position === "top" && "bottom-[-4px] left-1/2 -translate-x-1/2",
               position === "bottom" && "top-[-4px] left-1/2 -translate-x-1/2",
               position === "left" && "right-[-4px] top-1/2 -translate-y-1/2",
-              position === "right" && "left-[-4px] top-1/2 -translate-y-1/2"
+              position === "right" && "left-[-4px] top-1/2 -translate-y-1/2",
             )}
           />
         </div>
