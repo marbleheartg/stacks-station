@@ -27,10 +27,10 @@ const menuItems = [
     to: "/bridging",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 2.1l4 4-4 4" />
-        <path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8" />
-        <path d="M7 21.9l-4-4 4-4" />
-        <path d="M21 11.8v2a4 4 0 0 1-4 4H4.2" />
+        <path d="M3 8 7 4l4 4" />
+        <path d="M7 4v16" />
+        <path d="m21 16-4 4-4-4" />
+        <path d="M17 20V4" />
       </svg>
     ),
   },

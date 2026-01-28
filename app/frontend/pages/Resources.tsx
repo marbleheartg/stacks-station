@@ -50,7 +50,7 @@ export default function Resources() {
                 className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
               >
                 <span className="font-medium text-orange-50">{link.name}</span>
-                <span className="text-orange-200/50">↗</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-orange-200/50"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
               </a>
             ))}
           </CardContent>
