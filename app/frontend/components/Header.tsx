@@ -30,7 +30,7 @@ const Header = () => {
 
           <div className={clsx("absolute right-0 top-0 aspect-square w-[30px]", "border-2 border-(--bg-border) rounded-full", "cursor-pointer")}>
             <NextImage
-              src={user?.pfpUrl || "/images/og/icon.png"}
+              src={user?.pfpUrl || "https://placekittens.com/32/32"}
               fill
               alt="pfp"
               className="rounded-full"
